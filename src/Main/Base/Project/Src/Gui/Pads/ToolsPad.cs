@@ -2,33 +2,22 @@
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 
 using System;
+using System.Linq;
 using System.Windows.Controls;
 using ICSharpCode.Core;
 
 namespace ICSharpCode.SharpDevelop.Gui
 {
 	/// <summary>
-	/// Implement this interface to make your view content display tools in the tool box.
-	/// </summary>
-	public interface IToolsHost
-	{
-		/// <summary>
-		/// Gets the control to display in the tool box.
-		/// </summary>
-		object ToolsContent { get; }
-	}
-	
-	/// <summary>
 	/// A pad that shows a single child control determined by the document that currently has the focus.
 	/// </summary>
 	public class ToolsPad : AbstractPadContent
 	{
-		ContentPresenter contentControl = new ContentPresenter();
+		private ContentPresenter contentControl = new ContentPresenter();
 		
-		public override object Control {
-			get {
-				return contentControl;
-			}
+		public override object Control
+		{
+			get { return contentControl; }
 		}
 		
 		public ToolsPad()
@@ -37,14 +26,24 @@ namespace ICSharpCode.SharpDevelop.Gui
 			WorkbenchActiveContentChanged(null, null);
 		}
 		
-		void WorkbenchActiveContentChanged(object sender, EventArgs e)
+		private void WorkbenchActiveContentChanged(object sender, EventArgs e)
 		{
-			IToolsHost th = WorkbenchSingleton.Workbench.ActiveViewContent as IToolsHost;
-			if (th != null && th.ToolsContent != null) {
-				contentControl.SetContent(th.ToolsContent, th);
-			} else {
-				contentControl.SetContent(StringParser.Parse("${res:SharpDevelop.SideBar.NoToolsAvailableForCurrentDocument}"));
+			IViewContent viewContent = WorkbenchSingleton.Workbench.ActiveViewContent;
+			contentControl.SetContent(GetToolBoxContent(viewContent), viewContent);
+		}
+		
+		public object GetToolBoxContent(IViewContent viewContent)
+		{
+			if (viewContent != null)
+			{
+				Type holderType = viewContent.GetType();
+				var node = AddInTree.GetTreeNode("/SharpDevelop/Workbench/ToolBoxContent", false);
+				var toolBoxCodon = node.Codons.Where(codon => codon.Properties["holder"].Equals(holderType.FullName)).FirstOrDefault();
+				if (toolBoxCodon != null)
+					return toolBoxCodon.BuildItem(null, null);
 			}
+		
+			return StringParser.Parse("${res:SharpDevelop.SideBar.NoToolsAvailableForCurrentDocument}");;
 		}
 	}
 }

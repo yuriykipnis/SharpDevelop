@@ -573,5 +573,10 @@ namespace ICSharpCode.SharpDevelop.Project
 		public virtual void SaveProjectExtensions(string name, XElement element)
 		{
 		}
+		
+		public virtual bool CanParse(string language, string fileNameExtention)
+		{
+			return true;
+		}
 	}
 }

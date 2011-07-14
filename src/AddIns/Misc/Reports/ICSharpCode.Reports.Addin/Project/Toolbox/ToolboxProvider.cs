@@ -20,13 +20,11 @@ namespace ICSharpCode.Reports.Addin
 	
 	internal sealed class ReportingSideTabProvider
 	{
-		
-		private static SideTab standardSideTab;
+				private static SideTab standardSideTab;
 		private static int viewCount;
 		private static bool initialised;
 		
-		
-		private  ReportingSideTabProvider()
+				private  ReportingSideTabProvider()
 		{
 		}
 		
@@ -51,8 +49,7 @@ namespace ICSharpCode.Reports.Addin
 			initialised = true;
 		}
 		
-		
-		private static SideTab CreateReportingSidetab ()
+				private static SideTab CreateReportingSidetab ()
 		{
 			SideTab sideTab = new SideTab("ReportDesigner");
 			sideTab.CanSaved = false;
@@ -63,16 +60,12 @@ namespace ICSharpCode.Reports.Addin
 			tb.DisplayName = ResourceService.GetString("SharpReport.Toolbar.TextBox");
 			tb.Bitmap = WinFormsResourceService.GetIcon("Icons.16.16.SharpReport.Textbox").ToBitmap();
 			sideTab.Items.Add(new SideTabItemDesigner(tb));	
-			
-		
-			
-		
+					
 			//GroupHeader
 			tb = new ToolboxItem(typeof(ICSharpCode.Reports.Addin.GroupHeader));
 			tb.Bitmap = WinFormsResourceService.GetBitmap("Icons.16x16.NameSpace");
 			tb.DisplayName = ResourceService.GetString("SharpReport.Toolbar.GroupHeader");
 			sideTab.Items.Add(new SideTabItemDesigner(tb));
-			
 			
 			//GroupFooter
 			tb = new ToolboxItem(typeof(ICSharpCode.Reports.Addin.GroupFooter));
@@ -92,7 +85,6 @@ namespace ICSharpCode.Reports.Addin
 			tb = new ToolboxItem(typeof(ICSharpCode.Reports.Addin.BaseTableItem));
 			tb.DisplayName = ResourceService.GetString("SharpReport.Toolbar.Table");
 			sideTab.Items.Add(new SideTabItemDesigner(tb));	
-			
 			
 			//BaseDataItem
 			tb = new ToolboxItem(typeof(ICSharpCode.Reports.Addin.BaseDataItem));
@@ -129,7 +121,6 @@ namespace ICSharpCode.Reports.Addin
 			return sideTab;
 		}
 		
-		
 		private static void AddPointerToSideTab(SideTab sideTab)
 		{
 			// Add the standard pointer.
@@ -142,21 +133,21 @@ namespace ICSharpCode.Reports.Addin
 			sideTab.Items.Add(sti);
 		}
 		
+		static SharpDevelopSideBar _sideBar;
 		
-		static SharpDevelopSideBar reportingSideBar;
-		
-		public static SharpDevelopSideBar ReportingSideBar {
+		public static SharpDevelopSideBar SideBar
+		{
 			get {
 				Debug.Assert(WorkbenchSingleton.InvokeRequired == false);
-				if (reportingSideBar == null) {
-					reportingSideBar = new SharpDevelopSideBar();
-					reportingSideBar.Tabs.Add(standardSideTab);
-					ReportingSideBar.ActiveTab = standardSideTab;
-				}
-				return reportingSideBar;
+				return ReportingSideBar.Instance;
+			}
+			internal set
+			{
+				_sideBar = value;
+				_sideBar.Tabs.Add(standardSideTab);
+				_sideBar.ActiveTab = standardSideTab;
 			}
 		}
-		
 		
 		private static int ViewCount {
 			get { return viewCount; }
@@ -167,6 +158,23 @@ namespace ICSharpCode.Reports.Addin
 					standardSideTab = null;
 				}
 			}
+		}
+	}
+
+	public sealed class ReportingSideBar : SharpDevelopSideBar
+	{
+		private static ReportingSideBar _instance;
+		public static ReportingSideBar Instance
+		{
+			get
+			{
+				return _instance ?? (_instance = new ReportingSideBar());
+			}
+		}
+
+		private ReportingSideBar()
+		{
+			ReportingSideTabProvider.SideBar = this;
 		}
 	}
 }

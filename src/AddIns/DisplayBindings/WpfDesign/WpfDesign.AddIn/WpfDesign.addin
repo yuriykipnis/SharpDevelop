@@ -14,6 +14,7 @@
 			<ConditionEvaluator name="IsPropertiesOpen" class="ICSharpCode.WpfDesign.AddIn.Commands.IsPropertiesOpen" />
 			<ConditionEvaluator name="IsOutlineOpen" class="ICSharpCode.WpfDesign.AddIn.Commands.IsOutlineOpen" />
 		</Import>
+    <!--<Import assembly = ":ICSharpCode.WpfDesign.AddIn"/>-->
 	</Runtime>
 	<Path name="/SharpDevelop/Workbench/DisplayBindings">
 		<!--<DisplayBinding id    = "WPFDesigner"
@@ -22,6 +23,11 @@
 		                fileNamePattern = "\.xaml$"
 		                title = "WPF designer"/>-->
 		<DisplayBinding id="WPFDesigner" type="Secondary" class="ICSharpCode.WpfDesign.AddIn.WpfSecondaryDisplayBinding" fileNamePattern="\.xaml$" />
+	</Path>
+	<Path name = "/SharpDevelop/Workbench/ToolBoxContent">
+		<ToolContent  id = "WpfViewToolBox"
+		              holder ="ICSharpCode.WpfDesign.AddIn.WpfViewContent"
+		              class = "ICSharpCode.WpfDesign.AddIn.WpfSideBar"/>
 	</Path>
 	<!--
 	<Path name = "/SharpDevelop/Workbench/Pads">

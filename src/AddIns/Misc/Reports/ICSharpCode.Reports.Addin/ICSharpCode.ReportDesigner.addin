@@ -26,7 +26,13 @@
 		                languagePattern="^SharpDevelopReports$"
 		                class="ICSharpCode.Reports.Addin.ReportDesignerDisplayBinding"/>
 	</Path>
-	
+
+	<Path name = "/SharpDevelop/Workbench/ToolBoxContent">
+		<ToolContent  id = "ReportDesignerToolBox"
+				holder ="ICSharpCode.Reports.Addin.ReportDesignerView"
+				class = " ICSharpCode.Reports.Addin.ReportingSideBar"/>
+	</Path>
+
 	<!-- File Filter -->
 	<Path name ="/SharpDevelop/Workbench/FileFilter">
 		<FileFilter id="SharpDevelopReports"
